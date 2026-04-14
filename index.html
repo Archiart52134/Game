@@ -14,9 +14,9 @@
     />
     <link
       rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
     />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 
     <!-- Firebase -->
     <script type="module">
@@ -631,30 +631,35 @@
 
       .marker-buttons {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.4rem;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
         margin-bottom: 0.6rem;
       }
 
       .marker-btn {
-        padding: 0.5rem 0.4rem;
-        border-radius: 8px;
+        padding: 0.7rem 0.3rem;
+        border-radius: 10px;
         border: 2px solid transparent;
         font-family: "DM Sans", sans-serif;
-        font-size: 0.72rem;
+        font-size: 0.78rem;
         font-weight: 600;
         cursor: pointer;
         display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 0.3rem;
+        justify-content: center;
+        gap: 0.25rem;
         background: var(--card);
         color: var(--text);
         transition: all 0.15s;
+        text-align: center;
+        min-height: 54px;
+        line-height: 1.2;
       }
       .marker-btn:hover,
       .marker-btn.active {
         opacity: 1;
-        transform: none;
+        transform: scale(1.03);
       }
       .marker-btn.prison {
         border-color: #666;
@@ -693,7 +698,7 @@
         background: rgba(244, 196, 48, 0.2);
       }
       .marker-btn.full {
-        grid-column: 1 / -1;
+        grid-column: span 1;
       }
 
       .setting-row {
@@ -720,38 +725,43 @@
         text-align: right;
       }
 
-      .btn-start-game {
-        width: 100%;
+      .game-action-btns {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 0.5rem;
         margin-top: 0.6rem;
-        padding: 0.7rem;
+      }
+
+      .btn-start-game {
+        padding: 0.75rem 0.3rem;
         border-radius: 8px;
         border: none;
         font-family: "Bebas Neue", sans-serif;
-        font-size: 1.1rem;
-        letter-spacing: 2px;
+        font-size: 1rem;
+        letter-spacing: 1.5px;
         cursor: pointer;
         background: var(--green);
         color: var(--dark);
         transition: opacity 0.2s;
+        width: 100%;
       }
       .btn-start-game:hover {
         opacity: 0.85;
       }
 
       .btn-end-game {
-        width: 100%;
-        margin-top: 0.4rem;
-        padding: 0.7rem;
+        padding: 0.75rem 0.3rem;
         border-radius: 8px;
         border: none;
         font-family: "Bebas Neue", sans-serif;
-        font-size: 1.1rem;
-        letter-spacing: 2px;
+        font-size: 1rem;
+        letter-spacing: 1.5px;
         cursor: pointer;
         background: var(--red);
         color: white;
         transition: opacity 0.2s;
         display: none;
+        width: 100%;
       }
       .btn-end-game:hover {
         opacity: 0.85;
@@ -1343,6 +1353,206 @@
         background: rgba(244, 196, 48, 0.2);
       }
 
+      /* Marker visibility per team */
+      /* Marker visibility - compact inline row */
+      #marker-vis-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-bottom: 0.5rem;
+      }
+      .mtv-card {
+        flex: 1 1 auto;
+        min-width: 0;
+        background: var(--card);
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        padding: 0.45rem 0.3rem 0.35rem;
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.15s;
+        user-select: none;
+        position: relative;
+      }
+      .mtv-card:hover { border-color: var(--yellow); }
+      .mtv-card .mtv-icon {
+        font-size: 1.3rem;
+        line-height: 1;
+        display: block;
+      }
+      .mtv-card .mtv-name {
+        font-size: 0.58rem;
+        color: var(--muted);
+        margin-top: 0.15rem;
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .mtv-card .mtv-dots {
+        display: flex;
+        justify-content: center;
+        gap: 2px;
+        margin-top: 0.2rem;
+      }
+      .mtv-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--border);
+        transition: background 0.15s;
+      }
+      .mtv-dot.on-host { background: var(--yellow); }
+      .mtv-dot.on-runner { background: var(--blue); }
+      .mtv-dot.on-chaser { background: var(--red); }
+
+      .mtv-chip {
+        padding: 0.2rem 0.5rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        cursor: pointer;
+        border: 2px solid var(--border);
+        background: transparent;
+        color: var(--muted);
+        transition: all 0.15s;
+        user-select: none;
+      }
+      .mtv-chip.active-host { border-color: var(--yellow); background: rgba(244,196,48,0.15); color: var(--yellow); }
+      .mtv-chip.active-runner { border-color: var(--blue); background: rgba(29,127,191,0.15); color: var(--blue); }
+      .mtv-chip.active-chaser { border-color: var(--red); background: rgba(230,57,70,0.15); color: var(--red); }
+
+      /* GPS Sliders */
+      .gps-section { margin-top: 0.4rem; }
+      .gps-section-title {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 0.68rem;
+        letter-spacing: 2px;
+        color: var(--muted);
+        margin: 0.35rem 0 0.1rem;
+      }
+      .gps-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.2rem 0.6rem;
+      }
+      .setting-row-compact {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        margin-top: 0.1rem;
+      }
+      .setting-row-compact label {
+        font-size: 0.62rem;
+        color: var(--muted);
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .setting-row-compact input[type="range"] {
+        flex: 1;
+        accent-color: var(--yellow);
+        margin: 0;
+        height: 16px;
+        min-width: 0;
+      }
+      .setting-row-compact span {
+        font-family: 'Bebas Neue', sans-serif;
+        color: var(--yellow);
+        font-size: 0.82rem;
+        min-width: 28px;
+        text-align: right;
+        flex-shrink: 0;
+      }
+      .realtime-btn {
+        padding: 0.18rem 0.35rem;
+        border-radius: 5px;
+        border: 1px solid var(--green);
+        background: transparent;
+        color: var(--green);
+        font-size: 0.58rem;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.15s;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .realtime-btn.active { background: var(--green); color: var(--dark); }
+      .realtime-btn:hover { background: rgba(45,198,83,0.2); }
+
+      /* Clear All Button */
+      .btn-clear-all {
+        width: 100%;
+        padding: 0.75rem 0.3rem;
+        border-radius: 8px;
+        border: 1px solid #c0392b;
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 1rem;
+        letter-spacing: 1.5px;
+        cursor: pointer;
+        background: transparent;
+        color: #c0392b;
+        transition: all 0.2s;
+      }
+      .btn-clear-all:hover { background: rgba(192,57,43,0.15); }
+
+      /* Confirm Dialog */
+      #confirm-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.85);
+        z-index: 10000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+      }
+      #confirm-overlay.open { display: flex; }
+      .confirm-box {
+        background: var(--card);
+        border: 1px solid #c0392b;
+        border-radius: 16px;
+        padding: 1.5rem;
+        max-width: 340px;
+        width: 100%;
+        text-align: center;
+      }
+      .confirm-box h3 { color: #c0392b; font-size: 1.4rem; margin-bottom: 0.5rem; }
+      .confirm-box p { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.2rem; line-height: 1.5; }
+      .confirm-btns { display: flex; gap: 0.6rem; }
+      .confirm-btns button { flex: 1; padding: 0.7rem; border-radius: 8px; border: none; font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 2px; cursor: pointer; }
+      .confirm-cancel { background: var(--border); color: var(--text); }
+      .confirm-ok { background: #c0392b; color: white; }
+
+      /* Warning Signs (team markers) */
+      .warn-sign-popup { min-width: 180px; }
+      .warn-sign-popup input { width: 100%; margin: 0.3rem 0; padding: 0.3rem 0.5rem; border-radius: 6px; border: 1px solid var(--border); background: var(--dark); color: var(--text); font-size: 0.8rem; }
+      .warn-sign-popup button { padding: 0.3rem 0.6rem; border-radius: 6px; border: none; font-size: 0.75rem; cursor: pointer; margin: 0.1rem; }
+
+      /* Warning sign buttons for players */
+      .warning-btns {
+        display: flex;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+        margin-top: 0.5rem;
+      }
+      .warning-btn {
+        flex: 1;
+        padding: 0.5rem 0.3rem;
+        border-radius: 8px;
+        border: 2px solid;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.72rem;
+        font-weight: 600;
+        cursor: pointer;
+        background: var(--card);
+        color: var(--text);
+        transition: all 0.15s;
+        min-width: 120px;
+      }
+      .warning-btn.timed { border-color: #e67e22; color: #e67e22; }
+      .warning-btn.timed:hover { background: rgba(230,126,34,0.15); }
+      .warning-btn.permanent { border-color: #9b59b6; color: #9b59b6; }
+      .warning-btn.permanent:hover { background: rgba(155,89,182,0.15); }
+
       /* Placing mode hint */
       #placing-hint {
         position: fixed;
@@ -1385,6 +1595,48 @@
     >
       🌙
     </button>
+
+    <!-- Confirm Overlay -->
+    <div id="confirm-overlay">
+      <div class="confirm-box">
+        <h3 id="confirm-title">⚠️ ALLES LÖSCHEN?</h3>
+        <p id="confirm-msg">Diese Aktion löscht alle Chats, alle Marker und die Spielzone. Bitte bestätige zweimal.</p>
+        <div class="confirm-btns">
+          <button class="confirm-cancel" onclick="confirmCancel()">ABBRECHEN</button>
+          <button class="confirm-ok" id="confirm-ok-btn" onclick="confirmStep()">LÖSCHEN</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Marker Team Visibility Dialog -->
+    <div id="mtv-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:10000;display:none;align-items:center;justify-content:center;padding:1rem;">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;max-width:340px;width:100%;">
+        <h3 style="font-family:'Bebas Neue',sans-serif;color:var(--yellow);margin-bottom:0.5rem;font-size:1.4rem;" id="mtv-title">SICHTBARKEIT</h3>
+        <p style="color:var(--muted);font-size:0.8rem;margin-bottom:0.8rem;">Wähle, für welche Teams dieser Marker sichtbar ist:</p>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem;">
+          <button class="mtv-chip" id="mtv-host" onclick="toggleMtvChip('host')">⭐ Spielleiter</button>
+          <button class="mtv-chip" id="mtv-runner" onclick="toggleMtvChip('runner')">🔵 Christen</button>
+          <button class="mtv-chip" id="mtv-chaser" onclick="toggleMtvChip('chaser')">🔴 KGB</button>
+        </div>
+        <div style="display:flex;gap:0.5rem;">
+          <button style="flex:1;padding:0.7rem;border-radius:8px;border:none;background:var(--border);color:var(--text);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;cursor:pointer;" onclick="closeMtvDialog()">ABBRECHEN</button>
+          <button style="flex:1;padding:0.7rem;border-radius:8px;border:none;background:var(--yellow);color:var(--dark);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;cursor:pointer;" onclick="saveMtvDialog()">SPEICHERN</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Warning sign comment dialog -->
+    <div id="warn-comment-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:10000;display:none;align-items:center;justify-content:center;padding:1rem;">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;max-width:340px;width:100%;">
+        <h3 style="font-family:'Bebas Neue',sans-serif;color:var(--yellow);margin-bottom:0.5rem;font-size:1.4rem;" id="warn-comment-title">KOMMENTAR</h3>
+        <p style="color:var(--muted);font-size:0.8rem;margin-bottom:0.8rem;">Optionaler Kommentar für das Warnzeichen:</p>
+        <input type="text" id="warn-comment-input" placeholder="Kommentar (optional)..." maxlength="100" style="width:100%;margin-bottom:1rem;"/>
+        <div style="display:flex;gap:0.5rem;">
+          <button style="flex:1;padding:0.7rem;border-radius:8px;border:none;background:var(--border);color:var(--text);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;cursor:pointer;" onclick="closeWarnDialog()">ABBRECHEN</button>
+          <button style="flex:1;padding:0.7rem;border-radius:8px;border:none;background:var(--yellow);color:var(--dark);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;cursor:pointer;" onclick="placeWarnSign()">PLATZIEREN</button>
+        </div>
+      </div>
+    </div>
 
     <!-- Firebase Setup Overlay -->
     <div id="setup-overlay">
@@ -1619,6 +1871,10 @@
           <div class="mission-label">MISSION</div>
           <div id="mission-text">Warte auf den Spielleiter...</div>
         </div>
+        <div class="warning-btns">
+          <button class="warning-btn timed" onclick="startWarnSign('timed')">⚠️ Warnung (3 Min.)</button>
+          <button class="warning-btn permanent" onclick="startWarnSign('permanent')">📍 Dauermarkierung</button>
+        </div>
       </div>
 
       <!-- Host Panel -->
@@ -1633,92 +1889,70 @@
         <div class="host-players-list" id="host-players-list"></div>
 
         <!-- Marker visibility toggles -->
-        <div class="host-section-title">👁 SICHTBARKEIT DER MARKER</div>
-        <div class="visibility-grid">
-          <label class="vis-toggle"><input type="checkbox" checked onchange="toggleMarkerVis('prison')"> 🏛 Gefängnis</label>
-          <label class="vis-toggle"><input type="checkbox" checked onchange="toggleMarkerVis('runners-start')"> 🔵 Start Chr.</label>
-          <label class="vis-toggle"><input type="checkbox" checked onchange="toggleMarkerVis('chasers-start')"> 🔴 Start KGB</label>
-          <label class="vis-toggle"><input type="checkbox" checked onchange="toggleMarkerVis('pickup')"> 📦 Abholen</label>
-          <label class="vis-toggle"><input type="checkbox" checked onchange="toggleMarkerVis('dropoff')"> 🏁 Abgeben</label>
-          <label class="vis-toggle"><input type="checkbox" checked onchange="toggleMarkerVis('zone')"> 🗺 Zone</label>
-        </div>
+        <div class="host-section-title">👁 SICHTBARKEIT (klicken zum Konfigurieren)</div>
+        <div id="marker-vis-list"></div>
 
         <div class="host-section-title">🗺 MARKER SETZEN</div>
         <div class="marker-buttons">
           <button class="marker-btn prison" onclick="setPlacingMode('prison')">
-            🏛 Gefängnis
+            🏛<br>Gefängnis
           </button>
-          <button
-            class="marker-btn runners-start"
-            onclick="setPlacingMode('runners-start')"
-          >
-            🔵 Start Christen
+          <button class="marker-btn runners-start" onclick="setPlacingMode('runners-start')">
+            🔵<br>Start Chr.
           </button>
-          <button
-            class="marker-btn chasers-start"
-            onclick="setPlacingMode('chasers-start')"
-          >
-            🔴 Start KGB
+          <button class="marker-btn chasers-start" onclick="setPlacingMode('chasers-start')">
+            🔴<br>Start KGB
           </button>
-          <button
-            class="marker-btn pickup full"
-            onclick="setPlacingMode('pickup')"
-          >
-            📦 Karte abholen (nur Läufer)
+          <button class="marker-btn pickup" onclick="setPlacingMode('pickup')">
+            📦<br>Abholen
           </button>
-          <button
-            class="marker-btn dropoff full"
-            onclick="setPlacingMode('dropoff')"
-          >
-            🏁 Karte abgeben (nur Läufer)
+          <button class="marker-btn dropoff" onclick="setPlacingMode('dropoff')">
+            🏁<br>Abgeben
           </button>
-          <button
-            class="marker-btn full"
-            style="border-color: #9b59b6; color: #9b59b6"
-            onclick="startZoneMode()"
-          >
-            🗺 Spielzone zeichnen
+          <button class="marker-btn" style="border-color:#9b59b6;color:#9b59b6" onclick="startZoneMode()">
+            🗺<br>Zone
           </button>
         </div>
 
-        <!-- Per-team update intervals -->
-        <div class="setting-row">
-          <label>🔵 Christen GPS</label>
-          <input
-            type="range"
-            id="update-interval-runner"
-            min="10"
-            max="1800"
-            value="30"
-            step="10"
-            oninput="updateIntervalDisplay('runner')"
-          />
-          <span id="interval-display-runner">30s</span>
-        </div>
-        <div class="setting-row">
-          <label>🔴 KGB GPS</label>
-          <input
-            type="range"
-            id="update-interval-chaser"
-            min="10"
-            max="1800"
-            value="30"
-            step="10"
-            oninput="updateIntervalDisplay('chaser')"
-          />
-          <span id="interval-display-chaser">30s</span>
+        <!-- GPS Update Intervals -->
+        <div class="gps-section">
+          <div class="gps-section-title">📡 GPS GEGNER &nbsp;|&nbsp; 🤝 EIGENES TEAM</div>
+          <div class="gps-grid">
+            <div class="setting-row-compact">
+              <label>🔵→🔴</label>
+              <input type="range" id="vis-opp-runner" min="0" max="300" value="30" step="5" oninput="updateGpsDisplay('vis-opp-runner','disp-vis-opp-runner')"/>
+              <span id="disp-vis-opp-runner">30s</span>
+            </div>
+            <div class="setting-row-compact">
+              <label>🔵 Team</label>
+              <input type="range" id="vis-own-runner" min="0" max="300" value="10" step="5" oninput="updateGpsDisplay('vis-own-runner','disp-vis-own-runner')"/>
+              <span id="disp-vis-own-runner">10s</span>
+            </div>
+            <div class="setting-row-compact">
+              <label>🔴→🔵</label>
+              <input type="range" id="vis-opp-chaser" min="0" max="300" value="30" step="5" oninput="updateGpsDisplay('vis-opp-chaser','disp-vis-opp-chaser')"/>
+              <span id="disp-vis-opp-chaser">30s</span>
+            </div>
+            <div class="setting-row-compact">
+              <label>🔴 Team</label>
+              <input type="range" id="vis-own-chaser" min="0" max="300" value="10" step="5" oninput="updateGpsDisplay('vis-own-chaser','disp-vis-own-chaser')"/>
+              <span id="disp-vis-own-chaser">10s</span>
+            </div>
+          </div>
+          <div class="gps-section-title">⭐ SPIELLEITER GPS</div>
+          <div class="setting-row-compact">
+            <label>Alle</label>
+            <input type="range" id="vis-host" min="0" max="300" value="5" step="5" oninput="updateGpsDisplay('vis-host','disp-vis-host')"/>
+            <span id="disp-vis-host">5s</span>
+            <button class="realtime-btn" id="realtime-btn" onclick="toggleHostRealtime()">⚡ECHTZEIT</button>
+          </div>
         </div>
 
-        <button
-          class="btn-start-game"
-          id="btn-start-game"
-          onclick="startGame()"
-        >
-          ▶ SPIEL STARTEN
-        </button>
-        <button class="btn-end-game" id="btn-end-game" onclick="endGame()">
-          ⏹ SPIEL BEENDEN
-        </button>
+        <div class="game-action-btns">
+          <button class="btn-start-game" id="btn-start-game" onclick="startGame()">▶ STARTEN</button>
+          <button class="btn-end-game" id="btn-end-game" onclick="endGame()">⏹ BEENDEN</button>
+          <button class="btn-clear-all" onclick="confirmClearAll()">🗑 LÖSCHEN</button>
+        </div>
       </div>
     </div>
 
@@ -1740,9 +1974,27 @@
       let gameStartTime = null;
       let gameTimerInterval = null;
       let chatOpen = false;
-      let hostChatTab = "chaser"; // which team chat host is viewing
+      let hostChatTab = "chaser";
       let unreadCount = 0;
       let lastReadMsgId = null;
+      // Per-marker team visibility: { markerType: { host: bool, runner: bool, chaser: bool } }
+      let markerTeamVis = {
+        prison: { host: true, runner: false, chaser: true },
+        'runners-start': { host: true, runner: true, chaser: false },
+        'chasers-start': { host: true, runner: false, chaser: true },
+        pickup: { host: true, runner: true, chaser: false },
+        dropoff: { host: true, runner: true, chaser: false },
+        zone: { host: true, runner: true, chaser: true }
+      };
+      let mtvCurrentType = null;
+      let mtvTempSel = {};
+      // Warning signs
+      let warnSigns = {}; // id -> { marker, type, ts }
+      let warnSignMode = null; // 'timed' or 'permanent'
+      let hostRealtimeMode = false;
+      let hostRealtimeWatch = null;
+      // Confirm dialog
+      let confirmStep_count = 0;
 
       // Leaflet icons
       function makeIcon(emoji, color) {
@@ -2022,17 +2274,17 @@
             : 'Fange die Christen und bringe sie ins Gefängnis. Halte die Karte auf!';
         }
 
-        // Re-render location markers with new visibility rules
+        // Re-render location markers with per-team visibility
         const db = window._db;
         window._dbGet(window._dbRef(db, 'locations')).then(snap => {
           const data = snap.val() || {};
           Object.values(locationMarkers).forEach(m => map.removeLayer(m));
           locationMarkers = {};
-          // Re-trigger listenToLocations logic by faking an update
           Object.entries(data).forEach(([type, loc]) => {
-            if (!loc.lat) return;
-            if ((type === 'pickup' || type === 'dropoff') && myTeam === 'chaser') return;
-            if (type === 'prison' && myTeam === 'runner') return;
+            if (type === '_teamVis') return;
+            if (!loc || !loc.lat) return;
+            const vis = markerTeamVis[type];
+            if (vis && !vis[myTeam]) return;
             if (!window._ICONS) return;
             const labels = {
               prison: 'Gefängnis', 'runners-start': 'Start Christen',
@@ -2053,27 +2305,80 @@
       }
 
       // ══════════════════════════════════
-      // MARKER VISIBILITY (host)
+      // MARKER VISIBILITY PER TEAM
       // ══════════════════════════════════
-      const markerVisibility = {
-        prison: true, 'runners-start': true, 'chasers-start': true,
-        pickup: true, dropoff: true, zone: true
+      const MARKER_LABELS = {
+        prison: '🏛 Gefängnis', 'runners-start': '🔵 Start Christen',
+        'chasers-start': '🔴 Start KGB', pickup: '📦 Abholen',
+        dropoff: '🏁 Abgeben', zone: '🗺 Zone'
       };
 
-      function toggleMarkerVis(type) {
-        markerVisibility[type] = !markerVisibility[type];
-        if (type === 'zone') {
-          if (window._zonePolygon) {
-            if (markerVisibility.zone) map.addLayer(window._zonePolygon);
-            else map.removeLayer(window._zonePolygon);
-          }
-          return;
-        }
-        if (locationMarkers[type]) {
-          if (markerVisibility[type]) map.addLayer(locationMarkers[type]);
-          else map.removeLayer(locationMarkers[type]);
-        }
+      const MARKER_ICONS = {
+        prison: '🏛', 'runners-start': '🔵', 'chasers-start': '🔴',
+        pickup: '📦', dropoff: '🏁', zone: '🗺'
+      };
+      const MARKER_SHORT = {
+        prison: 'Gefäng.', 'runners-start': 'St.Chr.', 'chasers-start': 'St.KGB',
+        pickup: 'Abhol.', dropoff: 'Abgab.', zone: 'Zone'
+      };
+
+      function renderMarkerVisList() {
+        const el = document.getElementById('marker-vis-list');
+        if (!el) return;
+        el.innerHTML = '';
+        Object.keys(MARKER_LABELS).forEach(type => {
+          const vis = markerTeamVis[type] || { host: true, runner: true, chaser: true };
+          const card = document.createElement('div');
+          card.className = 'mtv-card';
+          card.title = MARKER_LABELS[type] + ' – klicken zum Konfigurieren';
+          card.onclick = () => openMtvDialog(type);
+          card.innerHTML = `
+            <span class="mtv-icon">${MARKER_ICONS[type] || '●'}</span>
+            <span class="mtv-name">${MARKER_SHORT[type] || type}</span>
+            <div class="mtv-dots">
+              <div class="mtv-dot ${vis.host ? 'on-host' : ''}" title="Spielleiter"></div>
+              <div class="mtv-dot ${vis.runner ? 'on-runner' : ''}" title="Christen"></div>
+              <div class="mtv-dot ${vis.chaser ? 'on-chaser' : ''}" title="KGB"></div>
+            </div>`;
+          el.appendChild(card);
+        });
       }
+
+      function openMtvDialog(type) {
+        mtvCurrentType = type;
+        const vis = markerTeamVis[type] || { host: true, runner: true, chaser: true };
+        mtvTempSel = Object.assign({}, vis);
+        document.getElementById('mtv-title').textContent = 'Sichtbarkeit: ' + (MARKER_LABELS[type] || type);
+        ['host', 'runner', 'chaser'].forEach(t => {
+          const btn = document.getElementById('mtv-' + t);
+          btn.className = 'mtv-chip' + (mtvTempSel[t] ? ' active-' + t : '');
+        });
+        document.getElementById('mtv-overlay').style.display = 'flex';
+      }
+
+      function toggleMtvChip(t) {
+        mtvTempSel[t] = !mtvTempSel[t];
+        const btn = document.getElementById('mtv-' + t);
+        btn.className = 'mtv-chip' + (mtvTempSel[t] ? ' active-' + t : '');
+      }
+
+      function closeMtvDialog() {
+        document.getElementById('mtv-overlay').style.display = 'none';
+        mtvCurrentType = null;
+      }
+
+      function saveMtvDialog() {
+        if (!mtvCurrentType) return;
+        markerTeamVis[mtvCurrentType] = Object.assign({}, mtvTempSel);
+        // Save to Firebase
+        const db = window._db;
+        window._dbUpdate(window._dbRef(db, 'locations/_teamVis'), { [mtvCurrentType]: mtvTempSel });
+        closeMtvDialog();
+        renderMarkerVisList();
+        toast('Sichtbarkeit gespeichert ✓');
+      }
+
+      function toggleMarkerVis(type) { /* legacy, no-op */ }
 
       // ══════════════════════════════════
       // GAME SCREEN INIT
@@ -2099,11 +2404,14 @@
           document.getElementById("player-panel").style.display = "none";
           document.getElementById("game-timer-bar").style.display = "flex";
           document.getElementById("chat-tabs").style.display = "flex";
-          document.getElementById("host-broadcast-area").style.display =
-            "block";
-          document.getElementById("chat-header-title").textContent =
-            "💬 KGB CHAT";
-          // Host sees both teams but can switch tabs
+          document.getElementById("host-broadcast-area").style.display = "block";
+          document.getElementById("chat-header-title").textContent = "💬 KGB CHAT";
+          renderMarkerVisList();
+          // Init GPS display values
+          ['vis-opp-runner','vis-opp-chaser','vis-own-runner','vis-own-chaser','vis-host'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) updateGpsDisplay(id, 'disp-' + id);
+          });
         } else {
           document.getElementById("host-panel").style.display = "none";
           document.getElementById("player-panel").style.display = "block";
@@ -2141,10 +2449,11 @@
         ).addTo(map);
 
         map.on("click", function (e) {
-          if (myTeam !== "host" || !placingMode) return;
           if (placingMode === "zone") {
             addZonePoint(e.latlng.lat, e.latlng.lng);
-          } else {
+          } else if (placingMode === "warnSign") {
+            doPlaceWarnSign(e.latlng.lat, e.latlng.lng);
+          } else if (placingMode && myTeam === "host") {
             placeLocationMarker(placingMode, e.latlng.lat, e.latlng.lng);
             setPlacingMode(null);
           }
@@ -2213,6 +2522,7 @@
 
       function cancelPlacing() {
         placingMode = null;
+        window._pendingWarnSign = null;
         document
           .querySelectorAll(".marker-btn")
           .forEach((b) => b.classList.remove("active"));
@@ -2238,13 +2548,18 @@
           Object.values(locationMarkers).forEach((m) => map.removeLayer(m));
           locationMarkers = {};
 
+          // Also sync markerTeamVis from Firebase if host stored it
+          if (data._teamVis) {
+            markerTeamVis = Object.assign({}, markerTeamVis, data._teamVis);
+          }
+
           Object.entries(data).forEach(([type, loc]) => {
-            if (!loc.lat) return;
-            if (
-              (type === "pickup" || type === "dropoff") &&
-              myTeam === "chaser"
-            )
-              return;
+            if (type === '_teamVis') return;
+            if (!loc || !loc.lat) return;
+
+            // Check per-team visibility
+            const vis = markerTeamVis[type];
+            if (vis && !vis[myTeam]) return;
 
             const icon = ICONS[type] || ICONS["prison"];
             const labels = {
@@ -2256,16 +2571,15 @@
             };
 
             const markerOptions = { icon };
-            // Host can drag location markers
             if (myTeam === "host") markerOptions.draggable = true;
 
             const marker = L.marker([loc.lat, loc.lng], markerOptions)
               .addTo(map)
               .bindPopup(
                 myTeam === "host"
-                  ? `<b>${
-                      labels[type] || type
-                    }</b><br><button onclick="deleteLocationMarker('${type}')" style="margin-top:6px;padding:4px 10px;border:1px solid #e63946;background:transparent;color:#e63946;border-radius:4px;cursor:pointer;font-size:0.8rem">🗑 Löschen</button>`
+                  ? `<b>${labels[type] || type}</b><br>
+                     <button onclick="openMtvDialog('${type}')" style="margin-top:6px;padding:4px 10px;border:1px solid var(--yellow);background:transparent;color:var(--yellow);border-radius:4px;cursor:pointer;font-size:0.75rem">👁 Sichtbarkeit</button>
+                     <button onclick="deleteLocationMarker('${type}')" style="margin-top:6px;padding:4px 10px;border:1px solid #e63946;background:transparent;color:#e63946;border-radius:4px;cursor:pointer;font-size:0.75rem">🗑 Löschen</button>`
                   : labels[type] || type
               );
 
@@ -2280,6 +2594,9 @@
             locationMarkers[type] = marker;
           });
         });
+
+        // Also listen to warning signs
+        listenToWarnSigns();
       }
 
       function deleteLocationMarker(type) {
@@ -2463,10 +2780,14 @@
       function onGameEnd() {
         gameActive = false;
         playBeep("end");
+        // Stop the game timer
+        if (gameTimerInterval) {
+          clearInterval(gameTimerInterval);
+          gameTimerInterval = null;
+        }
         if (myTeam === "host") {
           document.getElementById("btn-start-game").style.display = "block";
           document.getElementById("btn-end-game").style.display = "none";
-          if (gameTimerInterval) clearInterval(gameTimerInterval);
         }
         toast("🏁 Spiel beendet!");
       }
@@ -2554,20 +2875,24 @@
         const dbRef = window._dbRef;
         const dbSet = window._dbSet;
 
-        const intervalRunner = parseInt(
-          document.getElementById("update-interval-runner").value
-        );
-        const intervalChaser = parseInt(
-          document.getElementById("update-interval-chaser").value
-        );
+        // GPS intervals from new sliders (seconds)
+        const visOppRunner = parseInt(document.getElementById("vis-opp-runner").value);
+        const visOppChaser = parseInt(document.getElementById("vis-opp-chaser").value);
+        const visOwnRunner = parseInt(document.getElementById("vis-own-runner").value);
+        const visOwnChaser = parseInt(document.getElementById("vis-own-chaser").value);
+        const visHost = parseInt(document.getElementById("vis-host").value);
 
         gameStartTime = Date.now() + 10000; // 10 sec from now
 
         dbSet(dbRef(db, "gameState"), {
           active: true,
           ended: false,
-          intervalRunner: intervalRunner,
-          intervalChaser: intervalChaser,
+          intervalRunner: visOppRunner,
+          intervalChaser: visOppChaser,
+          visOwnRunner: visOwnRunner,
+          visOwnChaser: visOwnChaser,
+          visHost: visHost,
+          hostRealtime: hostRealtimeMode,
           startedAt: gameStartTime,
           countdown: 10,
         });
@@ -2584,18 +2909,243 @@
       }
 
       function updateIntervalDisplay(team) {
-        const val = parseInt(
-          document.getElementById("update-interval-" + team).value
-        );
-        let text = "";
-        if (val < 60) {
-          text = val + "s";
+        // Legacy compatibility
+        const el = document.getElementById("update-interval-" + team);
+        const dispEl = document.getElementById("interval-display-" + team);
+        if (!el || !dispEl) return;
+        const val = parseInt(el.value);
+        dispEl.textContent = val < 60 ? val + 's' : Math.floor(val/60) + 'min';
+      }
+
+      function updateGpsDisplay(sliderId, dispId) {
+        const el = document.getElementById(sliderId);
+        const dispEl = document.getElementById(dispId);
+        if (!el || !dispEl) return;
+        const val = parseInt(el.value);
+        if (val === 0) { dispEl.textContent = 'AUS'; return; }
+        if (val < 60) { dispEl.textContent = val + 's'; return; }
+        const min = Math.floor(val / 60);
+        const sec = val % 60;
+        dispEl.textContent = sec > 0 ? min + 'm' + sec + 's' : min + 'min';
+      }
+
+      function toggleHostRealtime() {
+        hostRealtimeMode = !hostRealtimeMode;
+        const btn = document.getElementById('realtime-btn');
+        if (btn) btn.className = 'realtime-btn' + (hostRealtimeMode ? ' active' : '');
+        if (hostRealtimeMode) {
+          // Start watching position in realtime
+          if (navigator.geolocation) {
+            hostRealtimeWatch = navigator.geolocation.watchPosition((pos) => {
+              const db = window._db;
+              window._dbUpdate(window._dbRef(db, 'players/' + myId), {
+                lat: pos.coords.latitude, lng: pos.coords.longitude, ts: Date.now()
+              });
+            }, null, { enableHighAccuracy: true, maximumAge: 0 });
+          }
+          toast('🔴 Echtzeit-GPS aktiv');
         } else {
-          const min = Math.floor(val / 60);
-          const sec = val % 60;
-          text = sec > 0 ? min + "m" + sec + "s" : min + "min";
+          if (hostRealtimeWatch !== null) {
+            navigator.geolocation.clearWatch(hostRealtimeWatch);
+            hostRealtimeWatch = null;
+          }
+          toast('Echtzeit-GPS deaktiviert');
         }
-        document.getElementById("interval-display-" + team).textContent = text;
+      }
+
+      // ══════════════════════════════════
+      // CLEAR ALL (host)
+      // ══════════════════════════════════
+      function confirmClearAll() {
+        confirmStep_count = 0;
+        document.getElementById('confirm-title').textContent = '⚠️ ALLES LÖSCHEN?';
+        document.getElementById('confirm-msg').textContent = 'Diese Aktion löscht alle Chats, alle Marker und die Spielzone. Drücke zweimal auf LÖSCHEN.';
+        document.getElementById('confirm-ok-btn').textContent = 'LÖSCHEN (1/2)';
+        document.getElementById('confirm-overlay').classList.add('open');
+      }
+
+      function confirmStep() {
+        confirmStep_count++;
+        if (confirmStep_count === 1) {
+          document.getElementById('confirm-title').textContent = '❗ WIRKLICH ALLES LÖSCHEN?';
+          document.getElementById('confirm-msg').textContent = 'Diese Aktion kann NICHT rückgängig gemacht werden!';
+          document.getElementById('confirm-ok-btn').textContent = 'JA, ALLES LÖSCHEN (2/2)';
+        } else {
+          confirmCancel();
+          doClearAll();
+        }
+      }
+
+      function confirmCancel() {
+        document.getElementById('confirm-overlay').classList.remove('open');
+        confirmStep_count = 0;
+      }
+
+      function doClearAll() {
+        const db = window._db;
+        const dbRef = window._dbRef;
+        const dbRemove = window._dbRemove;
+        // Clear chats
+        dbRemove(dbRef(db, 'chat'));
+        // Clear locations (markers + zone)
+        dbRemove(dbRef(db, 'locations'));
+        dbRemove(dbRef(db, 'zone'));
+        // Clear warning signs
+        dbRemove(dbRef(db, 'warnSigns'));
+        // Clear local markers from map
+        Object.values(locationMarkers).forEach(m => map.removeLayer(m));
+        locationMarkers = {};
+        if (zonePolygon) { map.removeLayer(zonePolygon); zonePolygon = null; }
+        zoneMarkers.forEach(m => map.removeLayer(m));
+        zoneMarkers = [];
+        zonePoints = [];
+        // Clear warning sign markers from map
+        Object.values(warnSigns).forEach(ws => { if (ws.marker) map.removeLayer(ws.marker); });
+        warnSigns = {};
+        toast('🗑 Alles gelöscht ✓');
+      }
+
+      // ══════════════════════════════════
+      // WARNING SIGNS (teams)
+      // ══════════════════════════════════
+      let warnPendingType = null;
+
+      function startWarnSign(type) {
+        warnPendingType = type;
+        document.getElementById('warn-comment-title').textContent =
+          type === 'timed' ? '⚠️ Warnung (3 Min.)' : '📍 Dauermarkierung';
+        document.getElementById('warn-comment-input').value = '';
+        document.getElementById('warn-comment-overlay').style.display = 'flex';
+      }
+
+      function closeWarnDialog() {
+        document.getElementById('warn-comment-overlay').style.display = 'none';
+        warnPendingType = null;
+        // Cancel map click mode
+        if (placingMode === 'warnSign') {
+          placingMode = null;
+          document.getElementById('placing-hint').classList.remove('show');
+        }
+      }
+
+      function placeWarnSign() {
+        const comment = document.getElementById('warn-comment-input').value.trim();
+        document.getElementById('warn-comment-overlay').style.display = 'none';
+        // Enter map click mode
+        placingMode = 'warnSign';
+        const typeLabel = warnPendingType === 'timed' ? '⚠️ Warnzeichen' : '📍 Dauermarkierung';
+        document.getElementById('placing-hint-text').textContent = `Klicke auf die Karte für: ${typeLabel}`;
+        document.getElementById('placing-hint').classList.add('show');
+        // Store pending data
+        window._pendingWarnSign = { type: warnPendingType, comment };
+        warnPendingType = null;
+      }
+
+      function doPlaceWarnSign(lat, lng) {
+        const pending = window._pendingWarnSign;
+        if (!pending) return;
+        window._pendingWarnSign = null;
+
+        const db = window._db;
+        const dbRef = window._dbRef;
+        const dbPush = window._dbPush;
+
+        const signData = {
+          lat, lng,
+          type: pending.type,
+          comment: pending.comment || '',
+          team: myTeam,
+          placedBy: myName,
+          ts: Date.now(),
+          expiresAt: pending.type === 'timed' ? Date.now() + 3 * 60 * 1000 : null
+        };
+
+        dbPush(dbRef(db, 'warnSigns'), signData);
+        placingMode = null;
+        document.getElementById('placing-hint').classList.remove('show');
+        toast((pending.type === 'timed' ? '⚠️ Warnung' : '📍 Markierung') + ' gesetzt!');
+      }
+
+      function listenToWarnSigns() {
+        const db = window._db;
+        const dbRef = window._dbRef;
+        const dbOnValue = window._dbOnValue;
+        const dbRemove = window._dbRemove;
+
+        dbOnValue(dbRef(db, 'warnSigns'), (snapshot) => {
+          // Remove old warn sign markers from map
+          Object.values(warnSigns).forEach(ws => { if (ws.marker) map.removeLayer(ws.marker); });
+          warnSigns = {};
+
+          const data = snapshot.val() || {};
+          const now = Date.now();
+
+          Object.entries(data).forEach(([id, sign]) => {
+            if (!sign || !sign.lat) return;
+            // Only show to same team
+            if (sign.team !== myTeam && myTeam !== 'host') return;
+            // Check expiry for timed signs
+            if (sign.type === 'timed' && sign.expiresAt && now > sign.expiresAt) {
+              dbRemove(dbRef(db, 'warnSigns/' + id));
+              return;
+            }
+
+            const emoji = sign.type === 'timed' ? '⚠️' : '📍';
+            const color = sign.team === 'runner' ? '#1D7FBF' : '#E63946';
+            const icon = L.divIcon({
+              html: `<div style="background:${color};width:36px;height:36px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 2px 8px rgba(0,0,0,0.5)">${emoji}</div>`,
+              iconSize: [36, 36], iconAnchor: [18, 18], className: ''
+            });
+
+            let timeLeft = '';
+            if (sign.type === 'timed' && sign.expiresAt) {
+              const mins = Math.max(0, Math.ceil((sign.expiresAt - now) / 60000));
+              timeLeft = `<br><small style="color:#e67e22">Läuft ab in ~${mins} Min.</small>`;
+            }
+
+            const canEdit = myTeam === sign.team || myTeam === 'host';
+            const popupHtml = `
+              <b>${emoji} ${sign.type === 'timed' ? 'Warnung' : 'Markierung'}</b>
+              ${sign.comment ? `<br><i>${sign.comment}</i>` : ''}
+              ${timeLeft}
+              <br><small>Von: ${sign.placedBy}</small>
+              ${canEdit ? `<br><button onclick="deleteWarnSign('${id}')" style="margin-top:5px;padding:3px 8px;border:1px solid #e63946;background:transparent;color:#e63946;border-radius:4px;cursor:pointer;font-size:0.75rem">🗑 Löschen</button>` : ''}
+            `;
+
+            const markerOpts = { icon };
+            if (canEdit) markerOpts.draggable = true;
+
+            const marker = L.marker([sign.lat, sign.lng], markerOpts)
+              .addTo(map)
+              .bindPopup(popupHtml);
+
+            if (canEdit) {
+              marker.on('dragend', function(e) {
+                const pos = e.target.getLatLng();
+                window._dbUpdate(window._dbRef(db, 'warnSigns/' + id), { lat: pos.lat, lng: pos.lng });
+                toast('Zeichen verschoben ✓');
+              });
+            }
+
+            warnSigns[id] = { marker, type: sign.type, ts: sign.ts };
+
+            // Auto-remove timed signs from Firebase when expired
+            if (sign.type === 'timed' && sign.expiresAt) {
+              const remaining = sign.expiresAt - now;
+              if (remaining > 0) {
+                setTimeout(() => {
+                  dbRemove(dbRef(db, 'warnSigns/' + id));
+                }, remaining);
+              }
+            }
+          });
+        });
+      }
+
+      function deleteWarnSign(id) {
+        const db = window._db;
+        window._dbRemove(window._dbRef(db, 'warnSigns/' + id));
+        toast('Zeichen gelöscht ✓');
       }
 
       // ══════════════════════════════════
