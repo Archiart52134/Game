@@ -1954,7 +1954,7 @@
             🏛<br>Gefängnis
           </button>
           <button class="marker-btn runners-start" onclick="setPlacingMode('runners-start')">
-            🔵<br>Start Lä.
+            🔵<br>Start Läufer
           </button>
           <button class="marker-btn chasers-start" onclick="setPlacingMode('chasers-start')">
             🔴<br>Start Security
@@ -1972,15 +1972,16 @@
 
         <!-- GPS Update Intervals -->
         <div class="gps-section">
-          <div class="gps-section-title">📡 GPS GEGNER &nbsp;|&nbsp; 🤝 EIGENES TEAM</div>
-          <div class="gps-grid">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 0.6rem;">
+            <div class="gps-section-title" style="margin-bottom:0.2rem;">📡 GPS GEGNER</div>
+            <div class="gps-section-title" style="margin-bottom:0.2rem;">🤝 EIGENES TEAM</div>
             <div class="setting-row-compact">
               <label>🔵→🔴</label>
               <input type="range" id="vis-opp-runner" min="0" max="300" value="30" step="5" oninput="updateGpsDisplay('vis-opp-runner','disp-vis-opp-runner')"/>
               <span id="disp-vis-opp-runner">30s</span>
             </div>
             <div class="setting-row-compact">
-              <label>🔵 Team</label>
+              <label>🔵 Läufer</label>
               <input type="range" id="vis-own-runner" min="0" max="300" value="10" step="5" oninput="updateGpsDisplay('vis-own-runner','disp-vis-own-runner')"/>
               <span id="disp-vis-own-runner">10s</span>
             </div>
@@ -1990,7 +1991,7 @@
               <span id="disp-vis-opp-chaser">30s</span>
             </div>
             <div class="setting-row-compact">
-              <label>🔴 Team</label>
+              <label>🔴 Security</label>
               <input type="range" id="vis-own-chaser" min="0" max="300" value="10" step="5" oninput="updateGpsDisplay('vis-own-chaser','disp-vis-own-chaser')"/>
               <span id="disp-vis-own-chaser">10s</span>
             </div>
@@ -2486,8 +2487,8 @@
         pickup: '📦', dropoff: '🏁', zone: '🗺'
       };
       const MARKER_SHORT = {
-        prison: 'Gefäng.', 'runners-start': 'St.Lä.', 'chasers-start': 'St.Sec',
-        pickup: 'Abhol.', dropoff: 'Abgab.', zone: 'Zone'
+        prison: 'Gefängnis', 'runners-start': 'St. Läufer', 'chasers-start': 'St. Security',
+        pickup: 'Abholen', dropoff: 'Abgeben', zone: 'Zone'
       };
 
       function renderMarkerVisList() {
