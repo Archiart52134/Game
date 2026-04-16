@@ -2039,6 +2039,7 @@
       let gameActive = false;
       let gameStartTime = null;
       let gameTimerInterval = null;
+      let gameEndedAt = null;
       let chatOpen = false;
       let hostChatTab = "chaser";
       let unreadCount = 0;
@@ -2424,8 +2425,10 @@
       function applyTeamChange() {
         // Update badge
         const badge = document.getElementById('header-role-badge');
-        badge.textContent = myTeam === 'runner' ? '🔵 Läufer' : '🔴 Security';
-        badge.style.color = myTeam === 'runner' ? 'var(--blue)' : 'var(--red)';
+        if (badge) {
+          badge.textContent = myTeam === 'runner' ? '🔵 Läufer' : '🔴 Security';
+          badge.style.color = myTeam === 'runner' ? 'var(--blue)' : 'var(--red)';
+        }
 
         // Update chat header
         document.getElementById('chat-header-title').textContent =
@@ -2433,7 +2436,7 @@
 
         // Update chat button color
         const chatBtn = document.getElementById('chat-toggle-btn');
-        chatBtn.style.borderColor = myTeam === 'runner' ? 'var(--blue)' : 'var(--red)';
+        if (chatBtn) chatBtn.style.borderColor = myTeam === 'runner' ? 'var(--blue)' : 'var(--red)';
 
         // Update mission text
         const missionEl = document.getElementById('mission-text');
@@ -2447,7 +2450,7 @@
         const db = window._db;
         window._dbGet(window._dbRef(db, 'locations')).then(snap => {
           const data = snap.val() || {};
-          Object.values(locationMarkers).forEach(m => map.removeLayer(m));
+          if (map) Object.values(locationMarkers).forEach(m => map.removeLayer(m));
           locationMarkers = {};
           Object.entries(data).forEach(([type, loc]) => {
             if (type === '_teamVis') return;
@@ -2564,8 +2567,10 @@
           chaser: "🔴 Security",
           host: "⭐ SPIELLEITER",
         };
-        badge.textContent = labels[myTeam];
-        badge.style.color = colors[myTeam];
+        if (badge) {
+          badge.textContent = labels[myTeam];
+          badge.style.color = colors[myTeam];
+        }
         document.getElementById("header-player-name").textContent = myName;
 
         if (myTeam === "host") {
@@ -2590,14 +2595,16 @@
         }
 
         // Show chat button for everyone
-        document.getElementById("chat-toggle-btn").classList.add("visible");
         const chatBtn = document.getElementById("chat-toggle-btn");
-        chatBtn.style.borderColor =
-          myTeam === "runner"
-            ? "var(--blue)"
-            : myTeam === "chaser"
-            ? "var(--red)"
-            : "var(--yellow)";
+        if (chatBtn) {
+          chatBtn.classList.add("visible");
+          chatBtn.style.borderColor =
+            myTeam === "runner"
+              ? "var(--blue)"
+              : myTeam === "chaser"
+              ? "var(--red)"
+              : "var(--yellow)";
+        }
       }
 
       // ══════════════════════════════════
@@ -3002,8 +3009,6 @@
         toast("🏁 Spiel beendet!");
       }
 
-      let gameEndedAt = null;
-
       function startGameTimer() {
         // Clear any existing timer first
         if (gameTimerInterval) {
@@ -3013,6 +3018,7 @@
         gameEndedAt = null;
         const timerEl = document.getElementById("game-timer-display");
         const bar = document.getElementById("game-timer-bar");
+        if (!timerEl || !bar) return;
         bar.style.display = "flex";
 
         gameTimerInterval = setInterval(() => {
@@ -3258,14 +3264,15 @@
         // Clear warning signs
         dbRemove(dbRef(db, 'warnSigns'));
         // Clear local markers from map
-        Object.values(locationMarkers).forEach(m => map.removeLayer(m));
+        if (map) {
+          Object.values(locationMarkers).forEach(m => map.removeLayer(m));
+          if (zonePolygon) { map.removeLayer(zonePolygon); zonePolygon = null; }
+          zoneMarkers.forEach(m => map.removeLayer(m));
+          Object.values(warnSigns).forEach(ws => { if (ws.marker) map.removeLayer(ws.marker); });
+        }
         locationMarkers = {};
-        if (zonePolygon) { map.removeLayer(zonePolygon); zonePolygon = null; }
-        zoneMarkers.forEach(m => map.removeLayer(m));
         zoneMarkers = [];
         zonePoints = [];
-        // Clear warning sign markers from map
-        Object.values(warnSigns).forEach(ws => { if (ws.marker) map.removeLayer(ws.marker); });
         warnSigns = {};
         toast('🗑 Alles gelöscht ✓');
       }
@@ -3339,7 +3346,7 @@
 
         dbOnValue(dbRef(db, 'warnSigns'), (snapshot) => {
           // Remove old warn sign markers from map
-          Object.values(warnSigns).forEach(ws => { if (ws.marker) map.removeLayer(ws.marker); });
+          if (map) Object.values(warnSigns).forEach(ws => { if (ws.marker) map.removeLayer(ws.marker); });
           warnSigns = {};
 
           const data = snapshot.val() || {};
@@ -3628,6 +3635,7 @@
         navigator.geolocation.getCurrentPosition(sendLocation);
 
         function scheduleUpdate() {
+          if (!gameActive) return;
           navigator.geolocation.getCurrentPosition(sendLocation);
           setTimeout(scheduleUpdate, updateIntervalMs);
         }
@@ -3705,24 +3713,22 @@
               if (!chatOpen) {
                 // Count new messages
                 const msgCount = Object.keys(data).length;
+                const badgeEl = document.getElementById("chat-unread-badge");
                 const prevCount = parseInt(
-                  document.getElementById("chat-unread-badge").dataset.total ||
-                    "0"
+                  (badgeEl && badgeEl.dataset.total) || "0"
                 );
                 if (msgCount > prevCount) {
                   const newMsgs = msgCount - prevCount;
                   unreadCount += newMsgs;
-                  document.getElementById("chat-unread-badge").textContent =
-                    unreadCount;
-                  document
-                    .getElementById("chat-unread-badge")
-                    .classList.add("show");
-                  document.getElementById("chat-unread-badge").dataset.total =
-                    msgCount;
+                  if (badgeEl) {
+                    badgeEl.textContent = unreadCount;
+                    badgeEl.classList.add("show");
+                    badgeEl.dataset.total = msgCount;
+                  }
                 }
               } else {
-                document.getElementById("chat-unread-badge").dataset.total =
-                  Object.keys(data).length;
+                const badgeEl = document.getElementById("chat-unread-badge");
+                if (badgeEl) badgeEl.dataset.total = Object.keys(data).length;
               }
             }
           });
