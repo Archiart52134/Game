@@ -2453,7 +2453,7 @@
             if (type === '_teamVis') return;
             if (!loc || !loc.lat) return;
             const vis = markerTeamVis[type];
-            if (vis && !vis[myTeam]) return;
+            if (vis && vis[myTeam] !== true) return;
             if (!window._ICONS) return;
             const labels = {
               prison: 'Gefängnis', 'runners-start': 'Start Läufer',
@@ -2825,6 +2825,7 @@
 
       function updatePlayerChips(data) {
         const el = document.getElementById("header-players");
+        if (!el) return;
         el.innerHTML = "";
         Object.entries(data).forEach(([id, p]) => {
           if (!p.online) return;
@@ -2888,7 +2889,9 @@
 
           if (playerMarkers[id]) {
             playerMarkers[id].setLatLng([p.lat, p.lng]);
-            playerMarkers[id].setTooltipContent(p.name);
+            if (playerMarkers[id].setTooltipContent) {
+              playerMarkers[id].setTooltipContent(p.name);
+            }
           } else {
             const icon = ICONS[p.team] || ICONS["runner"];
             const tooltipClass =
@@ -3670,6 +3673,8 @@
         }
       }
 
+      let latestChatData = {};
+
       function switchChatTab(team) {
         hostChatTab = team;
         // Update tab styles
@@ -3682,8 +3687,6 @@
         // Re-render messages for new tab
         renderChatMessages(latestChatData);
       }
-
-      let latestChatData = {};
 
       function listenToChat() {
         const db = window._db;
@@ -3730,6 +3733,7 @@
         const relevantTeam = myTeam === "host" ? hostChatTab : myTeam;
         const data = allData[relevantTeam] || {};
         const container = document.getElementById("chat-messages");
+        if (!container) return;
         container.innerHTML = "";
 
         const msgs = Object.values(data).sort((a, b) => a.ts - b.ts);
@@ -3761,11 +3765,13 @@
 
       function scrollChatToBottom() {
         const c = document.getElementById("chat-messages");
+        if (!c) return;
         c.scrollTop = c.scrollHeight;
       }
 
       function sendChatMsg() {
         const input = document.getElementById("chat-input");
+        if (!input) return;
         const text = input.value.trim();
         if (!text) return;
 
@@ -3789,6 +3795,7 @@
 
       function sendBroadcast() {
         const input = document.getElementById("chat-input");
+        if (!input) return;
         const text = input.value.trim();
         if (!text) {
           toast("Bitte zuerst eine Nachricht eingeben");
