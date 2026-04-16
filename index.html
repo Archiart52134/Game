@@ -402,9 +402,6 @@
       }
 
       .btn-host {
-        position: fixed;
-        bottom: 1.5rem;
-        right: 1.5rem;
         background: transparent;
         border: 1px solid var(--border);
         color: var(--muted);
@@ -416,7 +413,6 @@
         letter-spacing: 2px;
         text-transform: uppercase;
         transition: all 0.2s;
-        z-index: 10;
       }
       .btn-host:hover {
         border-color: var(--yellow);
@@ -585,11 +581,44 @@
       #host-panel {
         background: var(--mid);
         border-top: 1px solid var(--border);
-        padding: 0.8rem 1rem;
         flex-shrink: 0;
         z-index: 1000;
-        max-height: 55vh;
+        height: 55vh;
+        min-height: 48px;
+        max-height: 88vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      #host-resize-handle {
+        flex-shrink: 0;
+        height: 18px;
+        cursor: ns-resize;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--mid);
+        border-bottom: 1px solid var(--border);
+        touch-action: none;
+        user-select: none;
+      }
+      #host-resize-handle::after {
+        content: '';
+        width: 36px;
+        height: 4px;
+        background: var(--border);
+        border-radius: 2px;
+        transition: background 0.15s;
+      }
+      #host-resize-handle:hover::after,
+      #host-resize-handle.dragging::after {
+        background: var(--yellow);
+      }
+
+      #host-panel-content {
+        flex: 1;
         overflow-y: auto;
+        padding: 0.8rem 1rem;
       }
 
       .host-panel-title {
@@ -696,47 +725,58 @@
         text-align: right;
       }
 
-      .game-action-btns {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 0.5rem;
-        margin-top: 0.6rem;
+      #header-action-btns {
+        display: flex;
+        gap: 0.35rem;
+        align-items: center;
+      }
+      #header-action-btns button {
+        height: 34px !important;
+        width: auto !important;
+        min-width: 34px !important;
+        padding: 0 0.75rem !important;
+        margin: 0 !important;
+        font-size: 0.9rem !important;
+        line-height: 34px !important;
+        display: inline-flex;
+        align-items: center !important;
+        justify-content: center !important;
+        white-space: nowrap !important;
+        box-sizing: border-box !important;
       }
 
       .btn-start-game {
-        padding: 0.75rem 0.3rem;
+        height: 34px;
+        padding: 0 0.8rem;
         border-radius: 8px;
         border: none;
         font-family: "Bebas Neue", sans-serif;
-        font-size: 1rem;
+        font-size: 0.95rem;
         letter-spacing: 1.5px;
         cursor: pointer;
         background: var(--green);
         color: var(--dark);
         transition: opacity 0.2s;
-        width: 100%;
+        white-space: nowrap;
       }
-      .btn-start-game:hover {
-        opacity: 0.85;
-      }
+      .btn-start-game:hover { opacity: 0.85; }
 
       .btn-end-game {
-        padding: 0.75rem 0.3rem;
+        height: 34px;
+        padding: 0 0.8rem;
         border-radius: 8px;
         border: none;
         font-family: "Bebas Neue", sans-serif;
-        font-size: 1rem;
+        font-size: 0.95rem;
         letter-spacing: 1.5px;
         cursor: pointer;
         background: var(--red);
         color: white;
         transition: opacity 0.2s;
         display: none;
-        width: 100%;
+        white-space: nowrap;
       }
-      .btn-end-game:hover {
-        opacity: 0.85;
-      }
+      .btn-end-game:hover { opacity: 0.85; }
 
       .players-list {
         display: flex;
@@ -844,7 +884,7 @@
         position: fixed;
         inset: 0;
         background: rgba(0, 0, 0, 0.88);
-        z-index: 8000;
+        z-index: 10000;
         display: none;
         align-items: center;
         justify-content: center;
@@ -1017,17 +1057,36 @@
       .swap-btn:hover { border-color: var(--yellow); color: var(--yellow); }
 
       .host-player-actions { display: flex; gap: 0.2rem; align-items: center; }
-        position: fixed;
-        top: 12px;
-        right: 12px;
-        z-index: 9998;
-        width: 36px;
-        height: 36px;
+
+      #theme-btn {
+        width: 34px;
+        height: 34px;
         border-radius: 50%;
         border: 1px solid var(--border);
         background: var(--card);
         color: var(--text);
-        font-size: 18px;
+        font-size: 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Theme button on intro/lobby screens */
+      #theme-btn-intro {
+        position: fixed;
+        top: 12px;
+        right: 12px;
+        z-index: 9998;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        background: var(--card);
+        color: var(--text);
+        font-size: 16px;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -1035,27 +1094,37 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
       }
 
-      .locate-btn {
-        position: absolute;
-        bottom: 120px;
-        right: 10px;
+      .map-corner-btns {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 10px;
+        flex-shrink: 0;
         z-index: 1000;
-        width: 44px;
-        height: 44px;
+        margin-top: -50px;
+        pointer-events: none;
+        position: relative;
+      }
+      .map-corner-btns > * {
+        pointer-events: auto;
+      }
+
+      .locate-btn {
+        width: 40px;
+        height: 40px;
         background: white;
         border: none;
-        border-radius: 50%;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: background 0.15s, box-shadow 0.15s;
+        transition: background 0.15s;
         padding: 0;
       }
       .locate-btn:active {
         background: #e8f0fe;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
       }
       .locate-btn svg {
         width: 22px;
@@ -1064,10 +1133,6 @@
 
       /* REFRESH MAP BUTTON */
       .refresh-btn {
-        position: relative;
-        bottom: 10px;
-        left: 10px;
-        z-index: 1000;
         width: 40px;
         height: 40px;
         background: rgb(255, 255, 255);
@@ -1217,6 +1282,21 @@
         background: var(--card);
         border-bottom: 1px solid var(--border);
       }
+      .tab-badge {
+        display: inline-block;
+        background: var(--yellow);
+        color: var(--dark);
+        border-radius: 10px;
+        font-size: 0.6rem;
+        padding: 0 4px;
+        min-width: 15px;
+        text-align: center;
+        font-family: "DM Sans", sans-serif;
+        font-weight: 700;
+        vertical-align: middle;
+        margin-left: 3px;
+      }
+      .tab-badge:empty { display: none; }
       .chat-tab {
         flex: 1;
         padding: 0.3rem;
@@ -1629,14 +1709,12 @@
     </style>
   </head>
   <body>
+    <!-- Theme button for intro/lobby screens (fixed position) -->
     <button
-      class="theme-toggle"
-      id="theme-btn"
+      id="theme-btn-intro"
       onclick="toggleTheme()"
       title="Design wechseln"
-    >
-      🌙
-    </button>
+    >🌙</button>
 
     <!-- Confirm Overlay -->
     <div id="confirm-overlay">
@@ -1753,9 +1831,9 @@
       <div class="lobby-box">
         <input type="text" id="lobby-name" placeholder="Dein Name..." maxlength="20" style="text-align:center;font-size:1rem;margin-bottom:0.8rem;"/>
         <button class="btn-primary blue" onclick="joinLobby()" style="margin-bottom:0.5rem;">BEITRETEN</button>
+        <button class="btn-host" onclick="joinAsHost()">⭐ Als Spielleiter</button>
         <div id="lobby-players-list" style="margin-top:1rem;width:100%;"></div>
       </div>
-      <button class="btn-host" onclick="joinAsHost()">⭐ Als Spielleiter</button>
     </div>
 
     <!-- ZONE OUT-OF-BOUNDS WARNING -->
@@ -1780,9 +1858,15 @@
     <!-- SCREEN: Spiel -->
     <div class="screen" id="screen-game">
       <div class="game-header">
-        <div>
+        <div id="header-left">
           <div class="role-badge" id="header-role-badge">●</div>
           <div class="player-name-tag" id="header-player-name"></div>
+          <div id="header-action-btns" style="display:none">
+            <button class="btn-start-game" id="btn-start-game" onclick="startGame()">▶</button>
+            <button class="btn-end-game" id="btn-end-game" onclick="endGame()">⏹ BEENDEN</button>
+            <button class="btn-clear-all" onclick="confirmClearAll()">🗑</button>
+            <button class="btn-assign-teams" id="btn-assign-teams" onclick="assignTeamsRandom()" title="Teams zufällig zuteilen">🎲</button>
+          </div>
         </div>
         <div class="header-right">
           <div id="game-timer-bar">
@@ -1795,69 +1879,33 @@
             title="Satellit / Normal"
             style="width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;"
           >🛰</button>
+          <button
+            id="theme-btn"
+            onclick="toggleTheme()"
+            title="Design wechseln"
+          >🌙</button>
         </div>
       </div>
 
       <div id="map"></div>
-      <button class="locate-btn" onclick="locateMe()" title="Mein Standort">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="12" cy="12" r="3.5" fill="#1A73E8" />
-          <circle
-            cx="12"
-            cy="12"
-            r="6.5"
-            stroke="#1A73E8"
-            stroke-width="1.8"
-            fill="none"
-          />
-          <line
-            x1="12"
-            y1="2"
-            x2="12"
-            y2="5.5"
-            stroke="#1A73E8"
-            stroke-width="1.8"
-            stroke-linecap="round"
-          />
-          <line
-            x1="12"
-            y1="18.5"
-            x2="12"
-            y2="22"
-            stroke="#1A73E8"
-            stroke-width="1.8"
-            stroke-linecap="round"
-          />
-          <line
-            x1="2"
-            y1="12"
-            x2="5.5"
-            y2="12"
-            stroke="#1A73E8"
-            stroke-width="1.8"
-            stroke-linecap="round"
-          />
-          <line
-            x1="18.5"
-            y1="12"
-            x2="22"
-            y2="12"
-            stroke="#1A73E8"
-            stroke-width="1.8"
-            stroke-linecap="round"
-          />
-        </svg>
-      </button>
-      <button
-        class="refresh-btn"
-        onclick="refreshMap()"
-        title="Karte aktualisieren"
-      >
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4 12a8 8 0 018-8 8 8 0 016.93 4H16v2h6V2h-2v2.54A10 10 0 002 12h2z" fill="#1A73E8"/>
-          <path d="M20 12a8 8 0 01-8 8 8 8 0 01-6.93-4H8v-2H2v6h2v-2.54A10 10 0 0022 12h-2z" fill="#1A73E8"/>
-        </svg>
-      </button>
+      <div class="map-corner-btns">
+        <button class="refresh-btn" onclick="refreshMap()" title="Karte aktualisieren">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 12a8 8 0 018-8 8 8 0 016.93 4H16v2h6V2h-2v2.54A10 10 0 002 12h2z" fill="#1A73E8"/>
+            <path d="M20 12a8 8 0 01-8 8 8 8 0 01-6.93-4H8v-2H2v6h2v-2.54A10 10 0 0022 12h-2z" fill="#1A73E8"/>
+          </svg>
+        </button>
+        <button class="locate-btn" onclick="locateMe()" title="Mein Standort">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="3.5" fill="#1A73E8" />
+            <circle cx="12" cy="12" r="6.5" stroke="#1A73E8" stroke-width="1.8" fill="none" />
+            <line x1="12" y1="2" x2="12" y2="5.5" stroke="#1A73E8" stroke-width="1.8" stroke-linecap="round" />
+            <line x1="12" y1="18.5" x2="12" y2="22" stroke="#1A73E8" stroke-width="1.8" stroke-linecap="round" />
+            <line x1="2" y1="12" x2="5.5" y2="12" stroke="#1A73E8" stroke-width="1.8" stroke-linecap="round" />
+            <line x1="18.5" y1="12" x2="22" y2="12" stroke="#1A73E8" stroke-width="1.8" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
 
       <!-- Chat Toggle Button -->
       <button id="chat-toggle-btn" onclick="toggleChat()" title="Chat öffnen">
@@ -1887,14 +1935,14 @@
             id="tab-chaser"
             onclick="switchChatTab('chaser')"
           >
-            🔴 Security
+            🔴 Security<span class="tab-badge" id="tab-badge-chaser"></span>
           </button>
           <button
             class="chat-tab"
             id="tab-runner"
             onclick="switchChatTab('runner')"
           >
-            🔵 Läufer
+            🔵 Läufer<span class="tab-badge" id="tab-badge-runner"></span>
           </button>
         </div>
         <div class="chat-messages" id="chat-messages"></div>
@@ -1933,12 +1981,10 @@
 
       <!-- Host Panel -->
       <div id="host-panel" style="display: none">
+        <div id="host-resize-handle"></div>
+        <div id="host-panel-content">
         <div class="host-panel-title">⭐ SPIELLEITER-PANEL</div>
 
-        <!-- Random team assignment -->
-        <button class="btn-assign-teams" id="btn-assign-teams" onclick="assignTeamsRandom()">
-          🎲 TEAMS ZUFÄLLIG ZUTEILEN
-        </button>
 
         <div class="players-collapse-header" onclick="togglePlayersList()" id="players-collapse-header">
           <span>👥 SPIELER</span>
@@ -1976,29 +2022,28 @@
 
         <!-- GPS Update Intervals -->
         <div class="gps-section">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 0.6rem;">
-            <div class="gps-section-title" style="margin-bottom:0.2rem;">📡 GPS GEGNER</div>
-            <div class="gps-section-title" style="margin-bottom:0.2rem;">🤝 EIGENES TEAM</div>
-            <div class="setting-row-compact">
-              <label>🔵→🔴</label>
-              <input type="range" id="vis-opp-runner" min="0" max="300" value="30" step="5" oninput="updateGpsDisplay('vis-opp-runner','disp-vis-opp-runner')"/>
-              <span id="disp-vis-opp-runner">30s</span>
-            </div>
-            <div class="setting-row-compact">
-              <label>🔵 Läufer</label>
-              <input type="range" id="vis-own-runner" min="0" max="300" value="10" step="5" oninput="updateGpsDisplay('vis-own-runner','disp-vis-own-runner')"/>
-              <span id="disp-vis-own-runner">10s</span>
-            </div>
-            <div class="setting-row-compact">
-              <label>🔴→🔵</label>
-              <input type="range" id="vis-opp-chaser" min="0" max="300" value="30" step="5" oninput="updateGpsDisplay('vis-opp-chaser','disp-vis-opp-chaser')"/>
-              <span id="disp-vis-opp-chaser">30s</span>
-            </div>
-            <div class="setting-row-compact">
-              <label>🔴 Security</label>
-              <input type="range" id="vis-own-chaser" min="0" max="300" value="10" step="5" oninput="updateGpsDisplay('vis-own-chaser','disp-vis-own-chaser')"/>
-              <span id="disp-vis-own-chaser">10s</span>
-            </div>
+          <div class="gps-section-title" style="margin-bottom:0.2rem;">📡 GPS GEGNER</div>
+          <div class="setting-row-compact">
+            <label>🔵→🔴</label>
+            <input type="range" id="vis-opp-runner" min="0" max="300" value="30" step="5" oninput="updateGpsDisplay('vis-opp-runner','disp-vis-opp-runner')"/>
+            <span id="disp-vis-opp-runner">30s</span>
+          </div>
+          <div class="setting-row-compact">
+            <label>🔴→🔵</label>
+            <input type="range" id="vis-opp-chaser" min="0" max="300" value="30" step="5" oninput="updateGpsDisplay('vis-opp-chaser','disp-vis-opp-chaser')"/>
+            <span id="disp-vis-opp-chaser">30s</span>
+          </div>
+
+          <div class="gps-section-title" style="margin-bottom:0.2rem;margin-top:0.4rem;">🤝 EIGENES TEAM</div>
+          <div class="setting-row-compact">
+            <label>🔵 Läufer</label>
+            <input type="range" id="vis-own-runner" min="0" max="300" value="10" step="5" oninput="updateGpsDisplay('vis-own-runner','disp-vis-own-runner')"/>
+            <span id="disp-vis-own-runner">10s</span>
+          </div>
+          <div class="setting-row-compact">
+            <label>🔴 Security</label>
+            <input type="range" id="vis-own-chaser" min="0" max="300" value="10" step="5" oninput="updateGpsDisplay('vis-own-chaser','disp-vis-own-chaser')"/>
+            <span id="disp-vis-own-chaser">10s</span>
           </div>
           <div class="gps-section-title">⭐ SPIELLEITER GPS</div>
           <div class="setting-row-compact">
@@ -2009,11 +2054,6 @@
           </div>
         </div>
 
-        <div class="game-action-btns">
-          <button class="btn-start-game" id="btn-start-game" onclick="startGame()">▶ STARTEN</button>
-          <button class="btn-end-game" id="btn-end-game" onclick="endGame()">⏹ BEENDEN</button>
-          <button class="btn-clear-all" onclick="confirmClearAll()">🗑 LÖSCHEN</button>
-        </div>
 
         <!-- Mission Editor for Host -->
         <div class="host-section-title">📋 MISSION BEARBEITEN</div>
@@ -2023,6 +2063,7 @@
             <button onclick="openMissionEditor('chaser')" style="flex:1;padding:0.5rem 0.3rem;border-radius:8px;border:2px solid var(--red);background:rgba(230,57,70,0.15);color:var(--red);font-family:'Bebas Neue',sans-serif;font-size:0.9rem;letter-spacing:1px;cursor:pointer;">✏ Security Mission</button>
           </div>
         </div>
+        </div><!-- /host-panel-content -->
       </div>
     </div>
 
@@ -2044,10 +2085,15 @@
       let gameStartTime = null;
       let gameTimerInterval = null;
       let gameEndedAt = null;
+      let locationTimerHandle = null;
+      let initialized = false;
+      let isSatellite = false;
+      let baseTileLayer = null;
       let chatOpen = false;
       let hostChatTab = "chaser";
       let unreadCount = 0;
       let lastReadMsgId = null;
+      let tabPrevCounts = { chaser: 0, runner: 0 };
       // Per-marker team visibility: { markerType: { host: bool, runner: bool, chaser: bool } }
       let markerTeamVis = {
         prison: { host: true, runner: false, chaser: true },
@@ -2097,6 +2143,9 @@
           .querySelectorAll(".screen")
           .forEach((s) => s.classList.remove("active"));
         document.getElementById(id).classList.add("active");
+        // Show intro theme button only on non-game screens
+        const introBtn = document.getElementById("theme-btn-intro");
+        if (introBtn) introBtn.style.display = id === "screen-game" ? "none" : "flex";
       }
 
       // ══════════════════════════════════
@@ -2123,16 +2172,19 @@
           if (p.team && p.team !== 'pending' && myTeam === 'pending') {
             myTeam = p.team;
             startSpinAnimation(p.team, () => {
-              initGameScreen();
-              showScreen('screen-game');
-              initMap();
-              listenToPlayers();
-              listenToLocations();
-              listenToGameState();
-              listenToZone();
-              listenToChat();
-              listenToMissions();
-              startLocationTracking();
+              if (!initialized) {
+                initialized = true;
+                initGameScreen();
+                showScreen('screen-game');
+                initMap();
+                listenToPlayers();
+                listenToLocations();
+                listenToGameState();
+                listenToZone();
+                listenToChat();
+                listenToMissions();
+                startLocationTracking();
+              }
             });
           }
           // Mid-game team swap by host
@@ -2218,12 +2270,6 @@
         const segments = 16;
         const segAngle = (2 * Math.PI) / segments;
 
-        // Colors for segments
-        const secColors = ['#E63946', '#c0392b'];
-        const runColors = ['#1D7FBF', '#2980b9'];
-        const secLight = ['#f5b8bc', '#f8d7da'];
-        const runLight = ['#b8d4f5', '#d4e8f8'];
-
         function drawWheel(angle) {
           const cx = canvas.width / 2;
           const cy = canvas.height / 2;
@@ -2258,7 +2304,6 @@
             ctx.textAlign = 'right';
             ctx.fillStyle = 'white';
             ctx.font = 'bold 13px "Bebas Neue", sans-serif';
-            ctx.letterSpacing = '1px';
             ctx.shadowColor = 'rgba(0,0,0,0.5)';
             ctx.shadowBlur = 3;
             ctx.fillText(isSec ? 'Security' : 'Läufer', r - 10, 5);
@@ -2429,10 +2474,8 @@
       function applyTeamChange() {
         // Update badge
         const badge = document.getElementById('header-role-badge');
-        if (badge) {
-          badge.textContent = myTeam === 'runner' ? '🔵 Läufer' : '🔴 Security';
-          badge.style.color = myTeam === 'runner' ? 'var(--blue)' : 'var(--red)';
-        }
+        badge.textContent = myTeam === 'runner' ? '🔵 Läufer' : '🔴 Security';
+        badge.style.color = myTeam === 'runner' ? 'var(--blue)' : 'var(--red)';
 
         // Update chat header
         document.getElementById('chat-header-title').textContent =
@@ -2440,7 +2483,7 @@
 
         // Update chat button color
         const chatBtn = document.getElementById('chat-toggle-btn');
-        if (chatBtn) chatBtn.style.borderColor = myTeam === 'runner' ? 'var(--blue)' : 'var(--red)';
+        chatBtn.style.borderColor = myTeam === 'runner' ? 'var(--blue)' : 'var(--red)';
 
         // Update mission text
         const missionEl = document.getElementById('mission-text');
@@ -2454,13 +2497,13 @@
         const db = window._db;
         window._dbGet(window._dbRef(db, 'locations')).then(snap => {
           const data = snap.val() || {};
-          if (map) Object.values(locationMarkers).forEach(m => map.removeLayer(m));
+          Object.values(locationMarkers).forEach(m => map.removeLayer(m));
           locationMarkers = {};
           Object.entries(data).forEach(([type, loc]) => {
             if (type === '_teamVis') return;
             if (!loc || !loc.lat) return;
             const vis = markerTeamVis[type];
-            if (vis && vis[myTeam] !== true) return;
+            if (vis && !vis[myTeam]) return;
             if (!window._ICONS) return;
             const labels = {
               prison: 'Gefängnis', 'runners-start': 'Start Läufer',
@@ -2571,13 +2614,14 @@
           chaser: "🔴 Security",
           host: "⭐ SPIELLEITER",
         };
-        if (badge) {
-          badge.textContent = labels[myTeam];
-          badge.style.color = colors[myTeam];
-        }
+        badge.textContent = labels[myTeam];
+        badge.style.color = colors[myTeam];
         document.getElementById("header-player-name").textContent = myName;
 
         if (myTeam === "host") {
+          document.getElementById("header-role-badge").style.display = "none";
+          document.getElementById("header-player-name").style.display = "none";
+          document.getElementById("header-action-btns").style.display = "flex";
           document.getElementById("host-panel").style.display = "block";
           document.getElementById("player-panel").style.display = "none";
           document.getElementById("game-timer-bar").style.display = "flex";
@@ -2599,16 +2643,14 @@
         }
 
         // Show chat button for everyone
+        document.getElementById("chat-toggle-btn").classList.add("visible");
         const chatBtn = document.getElementById("chat-toggle-btn");
-        if (chatBtn) {
-          chatBtn.classList.add("visible");
-          chatBtn.style.borderColor =
-            myTeam === "runner"
-              ? "var(--blue)"
-              : myTeam === "chaser"
-              ? "var(--red)"
-              : "var(--yellow)";
-        }
+        chatBtn.style.borderColor =
+          myTeam === "runner"
+            ? "var(--blue)"
+            : myTeam === "chaser"
+            ? "var(--red)"
+            : "var(--yellow)";
       }
 
       // ══════════════════════════════════
@@ -2649,9 +2691,6 @@
       // ══════════════════════════════════
       // MAP STYLE TOGGLE (Satellite / Normal)
       // ══════════════════════════════════
-      let isSatellite = false;
-      let baseTileLayer = null;
-
       function toggleMapStyle() {
         isSatellite = !isSatellite;
         const btn = document.getElementById('map-style-btn');
@@ -2836,7 +2875,6 @@
 
       function updatePlayerChips(data) {
         const el = document.getElementById("header-players");
-        if (!el) return;
         el.innerHTML = "";
         Object.entries(data).forEach(([id, p]) => {
           if (!p.online) return;
@@ -2900,9 +2938,7 @@
 
           if (playerMarkers[id]) {
             playerMarkers[id].setLatLng([p.lat, p.lng]);
-            if (playerMarkers[id].setTooltipContent) {
-              playerMarkers[id].setTooltipContent(p.name);
-            }
+            playerMarkers[id].setTooltipContent(p.name);
           } else {
             const icon = ICONS[p.team] || ICONS["runner"];
             const tooltipClass =
@@ -2936,11 +2972,11 @@
           const state = snapshot.val();
           if (!state) return;
 
-          // Per-team intervals for players
-          if (myTeam === "runner" && state.intervalRunner) {
-            updateIntervalMs = state.intervalRunner * 1000;
-          } else if (myTeam === "chaser" && state.intervalChaser) {
-            updateIntervalMs = state.intervalChaser * 1000;
+          // Per-team intervals for players (own update frequency)
+          if (myTeam === "runner" && state.visOwnRunner) {
+            updateIntervalMs = state.visOwnRunner * 1000;
+          } else if (myTeam === "chaser" && state.visOwnChaser) {
+            updateIntervalMs = state.visOwnChaser * 1000;
           }
 
           if (state.active && !gameActive) {
@@ -2958,9 +2994,13 @@
           if (state.ended) {
             if (gameActive) onGameEnd();
             else {
-              // Ensure timer is stopped even after reconnect
+              // Reconnect: game already ended — reset UI
               if (gameTimerInterval) { clearInterval(gameTimerInterval); gameTimerInterval = null; }
-
+              if (locationTimerHandle) { clearTimeout(locationTimerHandle); locationTimerHandle = null; }
+              if (myTeam === "host") {
+                document.getElementById("btn-start-game").style.display = "inline-flex";
+                document.getElementById("btn-end-game").style.display = "none";
+              }
             }
           }
         });
@@ -2992,7 +3032,7 @@
         updateMission();
         if (myTeam === "host") {
           document.getElementById("btn-start-game").style.display = "none";
-          document.getElementById("btn-end-game").style.display = "block";
+          document.getElementById("btn-end-game").style.display = "inline-flex";
           startGameTimer();
         }
       }
@@ -3001,13 +3041,10 @@
         gameActive = false;
         gameEndedAt = Date.now();
         playBeep("end");
-        // Stop the game timer
-        if (gameTimerInterval) {
-          clearInterval(gameTimerInterval);
-          gameTimerInterval = null;
-        }
+        if (gameTimerInterval) { clearInterval(gameTimerInterval); gameTimerInterval = null; }
+        if (locationTimerHandle) { clearTimeout(locationTimerHandle); locationTimerHandle = null; }
         if (myTeam === "host") {
-          document.getElementById("btn-start-game").style.display = "block";
+          document.getElementById("btn-start-game").style.display = "inline-flex";
           document.getElementById("btn-end-game").style.display = "none";
         }
         toast("🏁 Spiel beendet!");
@@ -3022,7 +3059,6 @@
         gameEndedAt = null;
         const timerEl = document.getElementById("game-timer-display");
         const bar = document.getElementById("game-timer-bar");
-        if (!timerEl || !bar) return;
         bar.style.display = "flex";
 
         gameTimerInterval = setInterval(() => {
@@ -3099,10 +3135,6 @@
       function playBeep(type) {
         try {
           const ctx = new (window.AudioContext || window.webkitAudioContext)();
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.connect(gain);
-          gain.connect(ctx.destination);
 
           if (type === "start") {
             // Ascending beeps
@@ -3268,15 +3300,14 @@
         // Clear warning signs
         dbRemove(dbRef(db, 'warnSigns'));
         // Clear local markers from map
-        if (map) {
-          Object.values(locationMarkers).forEach(m => map.removeLayer(m));
-          if (zonePolygon) { map.removeLayer(zonePolygon); zonePolygon = null; }
-          zoneMarkers.forEach(m => map.removeLayer(m));
-          Object.values(warnSigns).forEach(ws => { if (ws.marker) map.removeLayer(ws.marker); });
-        }
+        Object.values(locationMarkers).forEach(m => map.removeLayer(m));
         locationMarkers = {};
+        if (zonePolygon) { map.removeLayer(zonePolygon); zonePolygon = null; }
+        zoneMarkers.forEach(m => map.removeLayer(m));
         zoneMarkers = [];
         zonePoints = [];
+        // Clear warning sign markers from map
+        Object.values(warnSigns).forEach(ws => { if (ws.marker) map.removeLayer(ws.marker); });
         warnSigns = {};
         toast('🗑 Alles gelöscht ✓');
       }
@@ -3350,7 +3381,7 @@
 
         dbOnValue(dbRef(db, 'warnSigns'), (snapshot) => {
           // Remove old warn sign markers from map
-          if (map) Object.values(warnSigns).forEach(ws => { if (ws.marker) map.removeLayer(ws.marker); });
+          Object.values(warnSigns).forEach(ws => { if (ws.marker) map.removeLayer(ws.marker); });
           warnSigns = {};
 
           const data = snapshot.val() || {};
@@ -3602,7 +3633,8 @@
 
       // Point-in-polygon for Leaflet polygons (ray casting)
       function leafletPIP(lat, lng, polygon) {
-        const latlngs = polygon.getLatLngs()[0];
+        let latlngs = polygon.getLatLngs()[0];
+        if (latlngs[0] && Array.isArray(latlngs[0])) latlngs = latlngs[0];
         let inside = false;
         for (let i = 0, j = latlngs.length - 1; i < latlngs.length; j = i++) {
           const xi = latlngs[i].lat, yi = latlngs[i].lng;
@@ -3639,11 +3671,10 @@
         navigator.geolocation.getCurrentPosition(sendLocation);
 
         function scheduleUpdate() {
-          if (!gameActive) return;
           navigator.geolocation.getCurrentPosition(sendLocation);
-          setTimeout(scheduleUpdate, updateIntervalMs);
+          locationTimerHandle = setTimeout(scheduleUpdate, updateIntervalMs);
         }
-        setTimeout(scheduleUpdate, updateIntervalMs);
+        locationTimerHandle = setTimeout(scheduleUpdate, updateIntervalMs);
 
         // High-frequency watch for realtime display (host always sees real-time)
         navigator.geolocation.watchPosition(
@@ -3685,20 +3716,22 @@
         }
       }
 
-      let latestChatData = {};
-
       function switchChatTab(team) {
         hostChatTab = team;
-        // Update tab styles
         document.getElementById("tab-chaser").className =
           "chat-tab" + (team === "chaser" ? " active-red" : "");
         document.getElementById("tab-runner").className =
           "chat-tab" + (team === "runner" ? " active-blue" : "");
         document.getElementById("chat-header-title").textContent =
           team === "chaser" ? "💬 Security CHAT" : "💬 Läufer CHAT";
-        // Re-render messages for new tab
+        // Clear badge for the tab we just switched to
+        const badge = document.getElementById("tab-badge-" + team);
+        if (badge) badge.textContent = "";
+        tabPrevCounts[team] = Object.keys((latestChatData[team] || {})).length;
         renderChatMessages(latestChatData);
       }
+
+      let latestChatData = {};
 
       function listenToChat() {
         const db = window._db;
@@ -3712,27 +3745,30 @@
             latestChatData[team] = data;
 
             const relevantTeam = myTeam === "host" ? hostChatTab : myTeam;
+            const msgCount = Object.keys(data).length;
+
             if (team === relevantTeam) {
               renderChatMessages(latestChatData);
               if (!chatOpen) {
-                // Count new messages
-                const msgCount = Object.keys(data).length;
-                const badgeEl = document.getElementById("chat-unread-badge");
                 const prevCount = parseInt(
-                  (badgeEl && badgeEl.dataset.total) || "0"
+                  document.getElementById("chat-unread-badge").dataset.total || "0"
                 );
                 if (msgCount > prevCount) {
-                  const newMsgs = msgCount - prevCount;
-                  unreadCount += newMsgs;
-                  if (badgeEl) {
-                    badgeEl.textContent = unreadCount;
-                    badgeEl.classList.add("show");
-                    badgeEl.dataset.total = msgCount;
-                  }
+                  unreadCount += msgCount - prevCount;
+                  document.getElementById("chat-unread-badge").textContent = unreadCount;
+                  document.getElementById("chat-unread-badge").classList.add("show");
+                  document.getElementById("chat-unread-badge").dataset.total = msgCount;
                 }
               } else {
-                const badgeEl = document.getElementById("chat-unread-badge");
-                if (badgeEl) badgeEl.dataset.total = Object.keys(data).length;
+                document.getElementById("chat-unread-badge").dataset.total = msgCount;
+              }
+            } else if (myTeam === "host") {
+              // Non-active tab: show badge on the tab button itself
+              const prev = tabPrevCounts[team] || 0;
+              if (msgCount > prev) {
+                tabPrevCounts[team] = msgCount;
+                const badge = document.getElementById("tab-badge-" + team);
+                if (badge) badge.textContent = msgCount - prev;
               }
             }
           });
@@ -3743,7 +3779,6 @@
         const relevantTeam = myTeam === "host" ? hostChatTab : myTeam;
         const data = allData[relevantTeam] || {};
         const container = document.getElementById("chat-messages");
-        if (!container) return;
         container.innerHTML = "";
 
         const msgs = Object.values(data).sort((a, b) => a.ts - b.ts);
@@ -3775,13 +3810,11 @@
 
       function scrollChatToBottom() {
         const c = document.getElementById("chat-messages");
-        if (!c) return;
         c.scrollTop = c.scrollHeight;
       }
 
       function sendChatMsg() {
         const input = document.getElementById("chat-input");
-        if (!input) return;
         const text = input.value.trim();
         if (!text) return;
 
@@ -3805,7 +3838,6 @@
 
       function sendBroadcast() {
         const input = document.getElementById("chat-input");
-        if (!input) return;
         const text = input.value.trim();
         if (!text) {
           toast("Bitte zuerst eine Nachricht eingeben");
@@ -3847,9 +3879,10 @@
       // ══════════════════════════════════
       function toggleTheme() {
         const isLight = document.body.classList.toggle("light");
-        document.getElementById("theme-btn").textContent = isLight
-          ? "☀️"
-          : "🌙";
+        const icon = isLight ? "☀️" : "🌙";
+        document.getElementById("theme-btn").textContent = icon;
+        const introBtn = document.getElementById("theme-btn-intro");
+        if (introBtn) introBtn.textContent = icon;
         if (map && !isSatellite) {
           if (baseTileLayer) map.removeLayer(baseTileLayer);
           const tileUrl = isLight
@@ -3867,6 +3900,8 @@
         if (localStorage.getItem("theme") === "light") {
           document.body.classList.add("light");
           document.getElementById("theme-btn").textContent = "☀️";
+          const introBtn = document.getElementById("theme-btn-intro");
+          if (introBtn) introBtn.textContent = "☀️";
         }
         // Restore chat button position from localStorage
         const savedPos = localStorage.getItem("chatBtnPos");
@@ -3979,6 +4014,50 @@
         // Remove old onclick to prevent double-trigger
         btn.removeAttribute('onclick');
       }
+
+      // ══════════════════════════════════
+      // HOST PANEL RESIZE
+      // ══════════════════════════════════
+      (function () {
+        const handle = document.getElementById('host-resize-handle');
+        const panel  = document.getElementById('host-panel');
+        if (!handle || !panel) return;
+
+        let startY = 0, startH = 0;
+
+        function onStart(e) {
+          startY = e.touches ? e.touches[0].clientY : e.clientY;
+          startH = panel.offsetHeight;
+          handle.classList.add('dragging');
+          document.addEventListener('mousemove', onMove);
+          document.addEventListener('mouseup', onEnd);
+          document.addEventListener('touchmove', onMove, { passive: false });
+          document.addEventListener('touchend', onEnd);
+          e.preventDefault();
+        }
+
+        function onMove(e) {
+          const y = e.touches ? e.touches[0].clientY : e.clientY;
+          const delta = startY - y; // drag up → positive → taller
+          const minH = 48;
+          const maxH = Math.round(window.innerHeight * 0.88);
+          const newH = Math.max(minH, Math.min(maxH, startH + delta));
+          panel.style.height = newH + 'px';
+          if (map) map.invalidateSize();
+          e.preventDefault();
+        }
+
+        function onEnd() {
+          handle.classList.remove('dragging');
+          document.removeEventListener('mousemove', onMove);
+          document.removeEventListener('mouseup', onEnd);
+          document.removeEventListener('touchmove', onMove);
+          document.removeEventListener('touchend', onEnd);
+        }
+
+        handle.addEventListener('mousedown', onStart);
+        handle.addEventListener('touchstart', onStart, { passive: false });
+      })();
     </script>
   </body>
 </html>
